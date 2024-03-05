@@ -1065,6 +1065,7 @@ END;
 --EXCEPTION
 END;
 -- 고친 내용
+-- 또 바꾼내용
 2) 저장 프로시저 (stored procedure) : 대표적인 PL/SQL (가장 많이 사용되는 PL/SQL)
 3) 저장 함수    (stored function )
 4) 패키지       (package)
