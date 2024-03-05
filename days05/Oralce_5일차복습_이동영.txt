@@ -1,0 +1,295 @@
+1.   올림(절상) 함수에 대해서 적고 설명하세요. 
+CEIL() 소수점 첫번 째 자리에서 올림 3.14 => 4
+1-2. 반올림 함수에 대해서 적고 설명하세요. 
+ROUND() 2번째 매개변수로 원하는 자리수에서 반올림 설정 가능
+1-3. 내림(절삭) 함수에 대해서 적고 설명하세요. 
+TRUNC(숫자, 날짜) : 날짜를 절삭할때는 포맷을 넣어서 '월', '일' '시' ... 등등을 절삭 가능하다.
+FLOOR(날짜) : 
+
+1-4. 나머지 함수: MOD()
+1-5. 절대값 함수: ABS()
+1-6. SIGN() 함수에 대해서 설명하세요. 양수는 1, 음수는 -1, 0은 0
+1-7. ASCII() : 아스키 코드값으로 반환
+1-8. GREATEST()/LEAST() : 매개변수들 중 가장 큰값, 가장 작은값 반환
+1-9. LENGTH() : 문자열의 길이
+1-10. UPPER()/LOWER()/INITCAP() : 대문자, 소문자, 첫글자만 대문자로 변환
+1-11. INSTR() : 원하는 문자열 위치 찾기 indexOf()와 유사 / 2번째 매개변수로 음수 넣으면 뒤에서부터 찾기
+1-12. SUBSTR() : 원하는 문자열 떼오기
+1-13. NULLIF() : 
+1-14. COALESCE()
+1-15. LAST_DAY() : 마지막 날짜를 반환
+1-16. MONTHS_BETWEEN(() : 두 날짜 사이의 개월 수 차이를 반환
+1-17.NEXT_DAY() : 2번째 매개변수로 들어오는 요일을 가장 최근에 돌아오는 날짜로 반환
+1-18. ADD_MONTHS() : 개월 수 더하기
+ 
+2.emp 테이블에서 급여와 평균급여를 구하고
+   각 사원의 급여-평균급여를 소수점 3자리에서 올림,반올림,내림해서 아래와 
+   같이 조회하는 쿼리를 작성하세요.
+   
+ENAME             PAY    AVG_PAY       차 올림      차 반올림       차 내림
+---------- ---------- ---------- ---------- ---------- ----------
+SMITH             800    2260.42   -1460.41   -1460.42   -1460.41
+ALLEN            1900    2260.42    -360.41    -360.42    -360.41
+WARD             1750    2260.42    -510.41    -510.42    -510.41
+JONES            2975    2260.42     714.59     714.58     714.58
+MARTIN           2650    2260.42     389.59     389.58     389.58
+BLAKE            2850    2260.42     589.59     589.58     589.58
+CLARK            2450    2260.42     189.59     189.58     189.58
+KING             5000    2260.42    2739.59    2739.58    2739.58
+TURNER           1500    2260.42    -760.41    -760.42    -760.41
+JAMES             950    2260.42   -1310.41   -1310.42   -1310.41
+FORD             3000    2260.42     739.59     739.58     739.58
+
+ENAME             PAY    AVG_PAY       차 올림      차 반올림       차 내림
+---------- ---------- ---------- ---------- ---------- ----------
+MILLER           1300    2260.42    -960.41    -960.42    -960.41
+
+
+
+SELECT sal + NVL(comm, 0) pay
+    , (SELECT ROUND(AVG(sal + NVL(comm, 0)), 2) AVG_PAY FROM emp) AVG_PAY
+    , (CEIL((sal + NVL(comm, 0)  - (SELECT AVG(sal + NVL(comm, 0)) AVG_PAY FROM emp))*100))/100 차올림
+    , ROUND(sal + NVL(comm, 0)  - (SELECT AVG(sal + NVL(comm, 0)) AVG_PAY FROM emp), 2) "차 반올림"
+    , TRUNC(sal + NVL(comm, 0)  - (SELECT AVG(sal + NVL(comm, 0)) AVG_PAY FROM emp), 2) 차내림
+FROM emp;
+
+2-2. emp 테이블에서 급여와 평균급여를 구하고
+    각 사원의 급여가 평균급여 보다 많으면 "많다"
+                   평균급여 보다 적으면 "적다"라고 출력
+
+
+SELECT empno, ename
+    , sal + NVL(comm, 0) pay
+    , (SELECT ROUND(AVG(sal + NVL(comm, 0)), 2) AVG_PAY FROM emp) AVG_PAY
+    , REPLACE(REPLACE(SIGN(sal + NVL(comm, 0) - (SELECT AVG(sal + NVL(comm, 0)) FROM emp)), -1 , '적다') , 1, '많다') AB
+FROM emp;
+
+
+3. insa 테이블에서 남자사원수, 여자사원수를 출력 
+[ 실행결과 ]
+ 성별        사원수
+남자사원수	31
+여자사원수	29
+
+SELECT DISTINCT (SELECT COUNT(*) FROM insa WHERE REGEXP_LIKE(ssn, '\d-[13579]')) "남자 사원수"
+    , (SELECT COUNT(*) FROM insa WHERE REGEXP_LIKE(ssn, '\d-[24680]')) "여자 사원수"
+FROM insa;
+
+4. SET(집합) 연산자에 대해서 설명하세요. 
+  ㄱ. INTERSECT : 교집합 // 두 쿼리문 사이에 같은 값만을 가져온다.
+  ㄴ. UNION 합집합 ( 중복된 값은 제거) // 두 쿼리문 합쳐서 가져온다.
+  ㄷ. UNIONALL 합집합 ( 모든 값을 출력 ) 
+  ㄹ. MINUS 차집합 // 위 쿼리문 과 아래 쿼리문을 뺀 위 쿼리문 결과를 가져옴
+  (주의할점) : 
+	
+5.  insa 테이블에서 모든 사원들을 14명씩 팀을 만드면 총 몇 팀이 나올지를 쿼리로 작성하세요.
+ ( 힌트 : 집계(그룹)함수 사용)  
+ 
+
+SELECT CEIL(COUNT(*)/14)
+FROM insa
+== 5팀
+
+6. emp 테이블에서 최고 급여자, 최저 급여자 정보 모두 조회
+  [실행결과]
+empno   ename   job     mgr     hiredate   pay      deptno  etc
+7369	SMITH	CLERK	7902	80/12/17	800		    20  최고급여자
+7839	KING	PRESIDENT		81/11/17	5000		10  최저급여자
+
+SELECT ename, empno, job, mgr, hiredate, deptno, sal + NVL(comm, 0) pay
+--    , REPLACE(REPLACE((SELECT sal + NVL(comm, 0) FROM emp WHERE deptno IN (10, 20)), 5000, '최고 급여자' ), 800, '최저 급여자' ) etc
+FROM emp e
+WHERE sal + NVL(comm, 0) >= ANY (SELECT MAX(sal + NVL(comm, 0)) pay FROM emp)
+    OR sal + NVL(comm, 0) <= ANY (SELECT MIN(sal + NVL(comm, 0)) pay FROM emp)
+
+
+7.  emp 테이블에서 
+   comm 이 400 이하인 사원의 정보 조회
+  ( 조건 : comm 이 null 인 사원도 포함 )
+ [실행결과]
+    ename   sal     comm
+     SMITH	800	    null
+    ALLEN	1600	300
+    WARD	1250	500 
+    JONES	2975    null	
+    MARTIN	1250	1400
+    BLAKE	2850    null	
+    CLARK	2450    null	
+    KING	5000    null	
+    TURNER	1500	0
+    JAMES	950	    null
+    FORD	3000    null	
+    MILLER	1300    null	
+  
+
+SELECT ename, sal, comm 
+FROM emp
+WHERE comm IS NULL OR comm <= 400;
+
+
+8. emp 테이블에서 [각 부서별] 급여(pay)를 가장 많이 받는 사원의 정보 출력.    
+   ㄱ. Correlated Subquery(상호연관 서브쿼리) 사용해서 풀기 
+   ㄴ. SET 연산자 사용해서 풀기
+
+SELECT ename, empno, sal + NVL(comm, 0) pay, deptno
+FROM emp p
+WHERE sal + NVL(comm, 0) >= ANY ( SELECT MAX(sal + NVL(comm, 0)) FROM emp c WHERE c.deptno = p.deptno)
+ORDER BY deptno ASC;
+
+
+SELECT ename, empno, sal + NVL(comm, 0) pay
+FROM emp
+WHERE deptno = 10 AND sal+NVL(comm, 0) >= (SELECT MAX(sal + NVL(comm, 0)) FROM emp WHERE deptno = 10)
+UNION
+SELECT ename, empno, sal + NVL(comm, 0) pay
+FROM emp
+WHERE deptno = 20 AND sal+NVL(comm, 0) >= (SELECT MAX(sal + NVL(comm, 0)) FROM emp WHERE deptno = 20)
+UNION
+SELECT ename, empno, sal + NVL(comm, 0) pay
+FROM emp
+WHERE deptno = 30 AND sal+NVL(comm, 0) >= (SELECT MAX(sal + NVL(comm, 0)) FROM emp WHERE deptno = 30);
+
+
+9. emp 테이블에서 30번 부서만 PAY를 계산 후 막대그래프를 아래와 같이 그리는 쿼리 작성
+   ( 필요한 부분은 결과 분석하세요~    PAY가 100 단위당 # 한개 , 반올림처리 )
+[실행결과]
+DEPTNO ENAME PAY BAR_LENGTH      
+---------- ---------- ---------- ----------
+30	BLAKE	2850	29	 #############################
+30	MARTIN	2650	27	 ###########################
+30	ALLEN	1900	19	 ###################
+30	WARD	1750	18	 ##################
+30	TURNER	1500	15	 ###############
+30	JAMES	950	    10	 ##########
+
+SELECT deptno, ename 
+    ,(sal + NVL(comm, 0)) pay
+    ,RPAD(ROUND((sal + NVL(comm, 0))/100), ROUND((sal + NVL(comm, 0))/100), '#')  BAR_LENGTH
+FROM emp
+WHERE deptno = 30
+ORDER BY sal + NVL(comm, 0) DESC;
+
+
+10. insa 테이블에서 주민등록번호를 123456-1******  형식으로 출력하세요 . 
+( LPAD  또는 RPAD 함수 사용해서 풀기  )
+[실행결과]
+홍길동	770423-1022432	770423-1******
+이순신	800423-1544236	800423-1******
+이순애	770922-2312547	770922-2******
+
+SELECT  ssn, RPAD(SUBSTR(ssn,1, 8), 14, '*') RPAD_SSN
+FROM insa;
+
+
+11. 이번 달이  몇일 까지 있는 지 출력하세요.
+
+SELECT TO_CHAR(LAST_DAY(SYSDATE) , 'DD')
+FROM dual;
+
+12. SELECT TRUNC( SYSDATE, 'YEAR' ) -- 현재 날짜에서 년 밑으로 절삭 (년 미만)
+      , TRUNC( SYSDATE, 'MONTH' )     -- 현재 날짜에서 월 밑으로 절삭 (월 미만)
+      , TRUNC( SYSDATE  ) 		     -- 현재 날짜 출력
+    FROM dual; -- 임시 테이블 만들어서 
+    위의 쿼리의 결과를 적으세요 . 
+
+-- 24 - 01 - 01
+-- 24 - 02 - 01
+-- 24 - 02 - 20
+
+  
+13. emp 에서 평균PAY 보다 같거나 큰 사원들만의 급여합을 출력.
+[실행결과]
+NAME             SAL       COMM        PAY    AVG_PAY
+---------- ---------- ---------- ---------- ----------
+JONES            2975                  2975 2260.41667
+MARTIN           1250       1400       2650 2260.41667
+BLAKE            2850                  2850 2260.41667
+CLARK            2450                  2450 2260.41667
+KING             5000                  5000 2260.41667
+FORD             3000                  3000 2260.41667
+  ㄱ. with절 사용
+  ㄴ. inline-view 사용
+
+
+
+
+14. emp 테이블에서 각 부서별 급여를 가장 많이 받는 사원의 pay를 출력 
+
+
+SELECT ename, empno, sal + NVL(comm, 0) pay, deptno
+FROM emp p
+WHERE sal + NVL(comm, 0) >= ANY ( SELECT MAX(sal + NVL(comm, 0)) FROM emp c WHERE c.deptno = p.deptno)
+ORDER BY deptno ASC;
+
+
+15. 다음 주 월요일은 휴강일이다.. 몇 일인가요 ? 
+
+SELECT TO_CHAR(NEXT_DAY( SYSDATE, '월'), 'DD')
+FROM dual;
+
+
+16. emp 테이블에서
+   각 사원들의 입사일자를 기준으로 10년 5개월 20일째 되는 날 ? 
+    [실행결과]
+        HIREDATE ADD_MONT
+        -------- --------
+        80/12/17 91/06/06
+        81/02/20 91/08/12
+        81/02/22 91/08/14
+        81/04/02 91/09/22
+        81/09/28 92/03/18
+        81/05/01 91/10/21
+        81/06/09 91/11/29
+        81/11/17 92/05/07
+        81/09/08 92/02/28
+        81/12/03 92/05/23
+        81/12/03 92/05/23 
+        82/01/23 92/07/12
+        
+        12개 행이 선택되었습니다. 
+ 
+SELECT hiredate
+    , ADD_MONTHS(hiredate, 12*10+5)+20 ADD_MONTH
+FROM emp ;
+
+17. insa 테이블에서
+    사원번호(num) 가  1002 인 사원의 주민번호의 월,일만을 오늘날짜로 수정하세요.
+                              ssn = '80XXXX-1544236'    
+
+
+SELECT SUBSTR(ssn, 1, 2) || TO_CHAR(SYSDATE, 'MM') || TO_CHAR(SYSDATE, 'DD') || SUBSTR(ssn, 7, 14)
+FROM insa
+WHERE num = 1002
+
+
+17-2.  insa 테이블에서 오늘을 기준으로 생일이 지남 여부를 출력하는 쿼리를 작성하세요 . 
+   ( '지났다', '안지났다', '오늘 ' 처리 )                              
+  
+
+
+
+
+18. emp 테이블의 ename, pay , 최대pay값 5000을 100%로 계산해서
+   각 사원의 pay를 백분률로 계산해서 10% 당 별하나(*)로 처리해서 출력
+   ( 소숫점 첫 째 자리에서 반올림해서 출력 )
+
+[실행결과]
+ename   pay     max_pay 퍼센트  별갯수
+SMITH	800	    5000	16%	    2	 **
+ALLEN	1900	5000	38%	    4	 ****
+WARD	1750	5000	35%	    4	 ****
+JONES	2975	5000	59.5%	6	 ******
+MARTIN	2650	5000	53%	    5	 *****
+BLAKE	2850	5000	57%	    6	 ******
+CLARK	2450	5000	49%	    5	 *****
+KING	5000	5000	100%	10	 **********
+TURNER	1500	5000	30%	    3	 ***
+JAMES	950	    5000	19%	    2	 **
+FORD	3000	5000	60%	    6	 ******
+MILLER	1300	5000	26%	    3	 ***  
+  
+  
+  SELECT ename, sal+NVL(comm, 0) pay
+    , ROUND((sal+NVL(comm, 0)) / (SELECT MAX(sal+NVL(comm, 0)) FROM emp)*100)
+FROM emp;
+  

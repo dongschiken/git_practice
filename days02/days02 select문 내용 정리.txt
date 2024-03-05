@@ -1,0 +1,65 @@
+1. 스키마(schema)
+userA가 생성되면 그에따른 스키마A가 생성되고 userA가 사용할 수 있는 모든 개체(Object)를 스키마A도 사용할 수 있다.
+- Session : 사용자의 접속해서 데이터베이스로부터 종료하는 시점까지를 세션이라고 한다.(exit 전까지)
+- v$session : 현재 실행중인 세션 정보를 나타내는 sql쿼리문
+- Tablespace : 논리적 데이터 구조 //   SELECT *  FROM dba_data_files;   (전체 테이블스페이스 조회) //  select tablespace_name,status from dba_tablespaces;  (테이블 스페이스 이름과 상태만 조회)
+
+
+2. select문
+-문제 : select문은 총 7개의 절로 나뉜다. + 처리순서 WITH => FROM => WHERE... => SELECT => ORDER BY
+• WITH절 (1번)
+
+• SELECT절 (6번)
+
+• FROM절 (2번)
+
+• WHERE절 (3번)
+
+• GROUP BY절 (4번)
+
+• HAVING절 (5번)
+
+• ORDER BY절 (7번
+
+FROM : 조회할 대상 == (테이블(Table), 뷰(View))
+
+- NUMBER( 7, 2 ) : 실수 형태
+- NUMBER( 7 ) : 정수 형태
+
+- SELECT문에서 사용할 수 있는 예약어 : DISTINCT, ALL, AS 사용가능
+SELECT *  -- emp의 모든 컬럼을 조회하겠다. (모든 행 조회)
+FROM emp;
+
+SELECT 문에서 올 수 있는 예약어
+1) DISTINCT : 출력할 컬럼이 중복될때 한번만 출력
+SELECT DISTINCT job
+FROM emp;
+2) SELECT  first_name || ' ' || last_name AS name AS "별칭" 
+- 원래 문법적으로는 AS와 별칭에서 " "를 사용해야 하지만 둘다 생략 가능하다. -> SELECT  first_name || ' ' || last_name AS name 별칭
+- 만약 별칭에 공백이 들어가야하면 " "를 꼭 붙여야한다.  "별 칭" O // 별 칭 X
+
+3) NULL : 미확인 값( 모르는 값, 정의되지 않은 값 )
+-- null을 처리하는 오라클 함수 : NVL(), NVL2(), NULLIF(), COALESCE() 4가지
+-- NVL2(expr1, expr2, expr3) // 만약 expr1이 널이아니라면 expr2로 바꾸고, null이면 expr3로 바꾼다.
+-- 문자열(ename)에 ' '를 추가하고싶으면 ''' ''' 이렇게 해주면 된다.
+SELECT '이름은'|| '''ename''' || '이고, 직업은 ' || job || ' 이다.'
+FROM emp;
+
+4) 문자열 더하기 또는 ' ' 추가히기 
+-- 문자열(ename)에 ' '를 추가하고싶으면 ''' ''' 이렇게 해주면 된다.
+SELECT '이름은'|| '''ename''' || '이고, 직업은 ' || job || ' 이다.'
+FROM emp;
+
+5) 문자는 왼쪽 정렬 // 숫자는 오른쪽 정렬
+SELECT 0, '0'
+FROM dual;
+
+3. DESCRIBE 명령어
+- 객체에서 컬럼 정보를 보여주는 명령어 ( 컬럼이 가진 정보들 == null, not null, 데이터 타입, 이름 등등...)
+- 테이블 전체 구조를 파악하기 위해서 봐야하는 정보들 (테이블 분석할 때 중요하다)
+
+4. WHERE절
+-- 조건절 ==> 참 또는 거짓 조건절
+-- 오라클에서 부정연산자 (not)
+-- 오라클에서 같다 > '=' // 다르다 '!=' , '<>'
+

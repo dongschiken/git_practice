@@ -1,0 +1,43 @@
+1. emp 테이블의 job의 갯수 출력
+
+SELECT COUNT(temp.job)
+FROM (SELECT DISTINCT job FROM emp) temp ;
+
+
+2. emp 테이블에서 ename    'la' 대소문자 구분없이 있는 사원 조회
+                              'la'  'La'  'lA'  'LA'
+                              
+
+SELECT *
+FROM emp
+WHERE UPPER(ename) LIKE '%LA%';  
+
+
+3.  emp 테이블에서 급여를 가장 많이 받는 사원의 정보를 조회.    
+
+SELECT *
+FROM emp
+WHERE sal + NVL(comm, 0) = ( SELECT MAX( sal + NVL(comm, 0)) sal FROM emp )
+ 
+3-2. emp 테이블에서 급여를 가장 적게 받는 사원의 정보를 조회.
+
+
+SELECT *
+FROM emp
+WHERE sal + NVL(comm, 0) = ( SELECT MIN( sal + NVL(comm, 0)) sal FROM emp )
+
+4. emp 테이블에서 총 사원수 조회
+
+SELECT COUNT(empno)
+FROM emp;
+
+4-2. emp 테이블에서 각 부서별 사원수 조회
+
+
+SELECT DISTINCT deptno, (SELECT COUNT(deptno) FROM emp c WHERE deptno = p.deptno)
+FROM emp p;
+
+5. emp  테이블에서 각 사원별 급여 등수
+
+SELECT ename, empno, sal+NVL(comm, 0) sal, RANK() OVER( ORDER BY sal+NVL(comm, 0) DESC) RANK
+FROM emp;

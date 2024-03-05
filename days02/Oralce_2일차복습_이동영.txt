@@ -1,0 +1,173 @@
+1. 용어정리
+ 1) 롤(Role) : 유저에게 어떤 권한을 부여할 수 있도록 롤을 만들어서 계속 사용할 수 있게 하는 것
+ 2) 스키마(Schema) : 유저A가 생성되면 스키마A도 자동적으로 생성되고 유저A의 모든 개체를 스키마A도 사용할 수 있게 된다.
+ 
+2. 모든 사용자 정보 조회하는 SQL를 작성하세요. ( 계정 상태 포함 )
+SELECT *
+FROM dba_users;
+
+3. scott 계정의 시스템 권한 및 롤 조회하는 SQL를 작성하세요.
+
+
+4. hr 계정의 비밀번S호(abcd) 변경 및  계정 잠김 해제하는 SQL를 작성하세요.
+ALTER USER hr IDENTIFIED BY abcd;
+ALTER USER hr ACCOUNT UNLOCK;
+
+
+5. SELECT문의 7가지 절을 적으시고, 처리 순서를 적으세요. 
+WITH -> FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY
+
+
+6.  employees 테이블에서  아래와 같이 출력되도록 쿼리 작성하세요. 
+    [실행 결과]
+    FIRST_NAME          LAST_NAME                   NAME                                           
+    -------------------- ------------------------- ---------------------------------------------- 
+    Samuel               McCain                    Samuel McCain                                  
+    Allan                McEwen                    Allan McEwen                                   
+    Irene                Mikkilineni               Irene Mikkilineni                              
+    Kevin                Mourgos                   Kevin Mourgos                                  
+    Julia                Nayer                     Julia Nayer   
+
+SELECT first_name, 
+	last_name, 
+	first_name ||' '||last_name "NAME"
+FROM employees;
+
+    
+7. emp 테이블에서 잡,  사원번호, 이름, 입사일자를 조회하는 SQL를 작성하세요.    
+SELECT job, empno, ename, hiredate
+FROM emp;    
+
+8. 어제까지 배운 [Oracle 함수]를 적고 설명하세요 .
+NVL(1, 2) : 1이 null일 경우 2에 있는 값으로 변경
+NVL2(1, 2, 3) 1이 null이 아닌경우 2, null인경우 3
+TO_CHAR() : 숫자를 문자로 바꿔주는 함수
+TO_NUMBER() : 문자를 숫자로 바꿔주는 함수
+UPPER() : 문자열을 대문자로 바꿔주는 함수
+LOWER() : 소문자로 바꿔주는 함수
+INITCAP() : 맨첫 문자만 대문자로 바꿔주는 함수
+COUNT() : 열에 해당하는 행 갯수 알려주는 함수
+
+9. 어제까지 배운 오라클의 연산자(operator)를 적으세요.   
+=, !=,  NOT, <>, AND, OR, IS NULL, IS NOT NULL
+
+10. insa 테이블에서 사원들이 속한 부서명을 중복되지 않게 아래와 같이
+    부서명 오름차순 정렬( ASC )해서 출력하세요.
+
+SELECT DISTINCT buseo
+FROM insa
+ORDER BY buseo ASC;
+    
+11. emp 테이블에서
+   pay(sal+comm)  1000 이상~ 3000 이하 받는  
+   30부서원을 제외한 모든 사원들만 
+   ename을 기준으로 오름차순 정렬해서 조회하는 쿼리를 작성하세요.      
+
+SELECT ename, empno, sal, comm, sal + NVL(comm, 0) pay, deptno
+FROM emp
+WHERE sal + NVL(comm, 0) >= 1000 AND sal + NVL(comm, 0) <= 3000 AND deptno != 30
+ORDER BY ename ASC;    
+
+12. emp 테이블에서 직속상사(mgr)가 없는  사원의 정보를 조회하는 쿼리 작성.
+
+SELECT *
+FROM emp
+WHERE mgr IS NULL;
+
+12-2. emp 테이블에서 직속상사(mgr)가 없는  사원의 mgr을 'CEO'로 출력하는 쿼리 작성.
+
+SELECT NVL(TO_CHAR(mgr), 'CEO') mgr
+FROM emp
+WHERE mgr IS NULL;
+
+12-3. insa 테이블에서 연락처(tel)가 없는 사원은 '연락처 등록 안됨' 출력하는 쿼리를 작성. 
+
+SELECT NVL( tel, '연락처 등록 안됨') 
+FROM insa;
+
+12-4. insa 테이블에서 개발부만 num, name, tel 컬럼 출력할 때 연락처(tel) 없는 사람은 X, O 출력하는 쿼리 작성.    
+SELECT num, name, NVL2(tel, 'O', 'X') tel
+FROM insa;
+
+13. emp 테이블에서  아래와 같은 조회 결과가 나오도록 쿼리를 작성하세요.
+    [실행 결과]
+     EMPNO ENAME             SAL       COMM        PAY
+---------- ---------- ---------- ---------- ----------
+      7369 SMITH             800          0        800
+      7499 ALLEN            1600        300       1900
+      7521 WARD             1250        500       1750
+      7566 JONES            2975          0       2975
+      7654 MARTIN           1250       1400       2650
+      7698 BLAKE            2850          0       2850
+      7782 CLARK            2450          0       2450
+      7839 KING             5000          0       5000
+      7844 TURNER           1500          0       1500
+      7900 JAMES             950          0        950
+      7902 FORD             3000          0       3000
+      7934 MILLER           1300          0       1300
+
+	12개 행이 선택되었습니다.  
+
+SELECT empno, ename, sal, NVL(comm, 0) comm, sal + NVL(comm, 0) pay
+FROM emp;
+
+14.   emp 테이블에서 10번 부서원 정보 조회
+
+SELECT *
+FROM emp
+WHERE deptno= 10;
+
+14-2. emp 테이블에서 10번 부서원을 제외한 사원 정보를 조회(출력)
+
+SELECT *
+FROM emp
+WHERE deptno != 10;
+
+14-3. emp 테이블에서 10번 또는 20번 부서원 정보를 조회
+
+SELECT *
+FROM emp
+WHERE deptno = 10 OR deptno = 20;
+
+15. emp 테이블에서 사원명이 'king' 인 사원의 정보 조회
+
+SELECT *
+FROM emp
+WHERE ename = UPPER('king');
+
+16. insa 테이블에서 출생지역이 수도권인 사원의 정보를 조회.
+
+SELECT *
+FROM insa
+WHERE city = '서울' OR city = '경기' OR city = '인천';
+
+17. emp 테이블에서 부서번호가 10번이고, 잡이 CLERK  인 사원의 정보를 조회하는 쿼리 작성.
+
+SELECT *
+FROM emp
+WHERE deptno = 10 AND job = 'CLERK';
+
+17-2. emp 테이블에서 잡이 CLERK 이고, 부서번호가 10번이 아닌 사원의 정보를 조회하는 쿼리 작성.
+
+SELECT *
+FROM emp
+WHERE deptno != 10 AND job = 'CLERK';
+
+17-3.  emp 테이블에서 부서번호가 30번이고, 커미션이 null인 사원의 정보를 조회하는 쿼리 작성.
+  ( ㄱ.  deptno, ename, sal, comm,  pay 컬럼 출력,  pay= sal+comm )
+  ( ㄴ. comm이 null 인 경우는 0으로 대체해서 처리 )
+  ( ㄷ. pay 가 많은 순으로 정렬 ) 
+
+SELECT deptno, ename, sal, comm, sal + NVL(comm, 0) pay
+FROM emp
+WHERE deptno = 30 AND comm IS NULL
+ORDER BY pay DESC;  
+
+18. Alias 를 작성하는 3가지 방법을 적으세요.
+   SELECT deptno, ename 
+     , sal + comm   (ㄱ)  pay
+     , sal + comm   (ㄴ)  "pay"
+     , sal + comm   (ㄷ)  AS "pay"
+    FROM emp; 
+
+

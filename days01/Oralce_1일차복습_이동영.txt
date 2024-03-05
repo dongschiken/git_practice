@@ -1,0 +1,107 @@
+
+1. SQL 이란 ? 
+구조적 질의 언어 : 우리가 데이터베이스를 사용하기 위해 질의 응답할 수 있는 언어이다.
+
+1-2. SQL의 5가지 종류 
+   ㄱ. DDL : CREATE(생성), DROP(삭제), ALTER(수정), // 테이블이나 유저를 생성하거나 삭제, 수정할 수 있는 쿼리문
+   ㄴ. QUERY : SELECT // 데이터베이스에서 모든 조회작업을 할 수 있는 쿼리문
+   ㄷ. DML : DELETE(삭제), UPDATE(수정), RENAME, TRUNCATE(삭제) // 행에 대해서 여러가지 작업을 수행할 수 있는 쿼리문 
+   ㄹ. DCL : GRANT(권한부여), REVOKE(권한 회수) : 데이터베이스 사용자에게 어떠한 권한을 부여하고 회수할 수 있는 쿼리문
+   ㅁ. COMMIT, ROLLBACK
+
+2. PL/SQL 이란 ? 
+   자바의 제어문처럼 SQL에서도 제어문을 사용할 수 있게 만든 SQL문법(오라클에서만 있는 문법)
+3. RDBMS 란 ? 
+    관계형 데이터베이스 시스템
+	- 데이터베이스(테이블)과 테이블 간의 관계에 목적을 둔 데이터베이스 시스템이다.
+	- 데이터베이스 시스템 : 데이터베이스를 잘 사용할 수 있도록 만든 소프트웨어, 프로그램이다. (오라클, MYSQL, MS SQL, SQLite...)
+4. SQL을 작성하세요.
+   ㄱ. 모든 사용자 정보를 조회하는 SQL을 작성하세요.
+	SELECT *
+	FROM all_users;
+	FROM dba_users;
+   ㄴ. scott 소유의 모든 테이블 정보를 조회하는 SQL을 작성하세요.
+	// SCOTT 사용자로 이동 한 후
+    	SELECT *
+	FROM tabs;
+
+5. DBA 란 ? 
+데이터베이스 관리자
+6. SID 란 ? 
+SYSTEM 식별자 
+우리는 무료버전이라서 XE다
+6-2. 전역 데이터베이스 이름 이란?   
+데이터베이스 이름.도메인 명
+우리는 무료버전이라서 XE.도메인명이다.
+
+7. "데이터 모델"이란 ?  
+데이터를 어떤 구조로 작성할지 구상해서 만들어내는것
+8. 관계형 데이터 모델의 핵심 구성 요소 
+  ㄱ. entity : 가장 작은 데이터의 단위(테이블)
+  ㄴ. column : 테이블에서 열을 의미
+  ㄷ. relation : 테이블과 테이블간의 관계
+  
+9. 테이블 ( table )?  
+  데이터에서 가장 작은 단위를 의미한다. 
+9-2. 테이블 스페이스 ?   
+  논리적 데이터 개념에서 시작이 되는 단위를 의미하고(가장 큰 단위)
+10. 단축키를 적으세요.
+  ㄱ. SQL 작성 후 실행하는 방법    : 
+      (1) F5
+      (2) ctrl + enter
+      (3) 
+  ㄴ. 주석 처리하는 방법           :  --  // ctrl  + /
+
+11. 오라클 삭제하는 순서를 적으세요. 
+   ㄱ. 
+   ㄴ. 
+   ㄷ. 
+   ㄹ. 
+
+12. Sqlplus.exe 를  사용해서
+   ㄱ. sys 계정으로 로그인하고       
+   ㄴ. 로그인한 계정을 확인하고   
+   ㄷ. 모든 사용자 계정 조회하고
+   ㄹ. 연결종료하는 코딩을 하세요.
+	sqlplus SYS/ss123$ AS SYSDBA
+	show user
+	show all_user
+	exit
+
+13. tnsname.ora 파일의 용도를 설명하세요. 
+    컴퓨터와 오라클 데이터베이스 연결설정 정보가 있는 파일
+14.  오라클 설치 후 주요 오라클 서비스 2가지       ***  
+  ㄱ.  sqlplus
+  ㄴ.  sql developer
+  ( 수업 시작 전에 반드시 확인 사항이죠.... )
+
+15. SQL은 기본 [ (1)     ] , [ (2)    ]을 대상으로 수행된다.  
+스키마, 테이블
+16. scott / 1234  계정 생성하는 SQL 작성  
+CREATE USER SCOTT IDENTIFIED BY 1234
+16-2. scott 계정의 비밀번호를 tiger 수정하는 SQL 작성
+ALTER USER SCOTT IDENTIFIED BY tiger
+16-3. scott 계정 삭제하는 SQL 작성
+DROP USER SCOTT;
+DROP USER SCOTT CASCADE;
+17. HR 계정의 유무를 확인하고
+	SELECT *
+	FROM all_user;
+    HR 계정의 접속하는데 있어서 문제점 파악 및 해결.
+	ALTER USER HR IDENTIFIED BY UNLOCK
+	COMMIT;
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+    
+      
