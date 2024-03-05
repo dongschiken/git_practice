@@ -514,6 +514,23 @@ BEGIN
 --EXCEPTION
 END;
 
+SELECT *
+FROM emp;
+
+DECLARE
+    vempno emp.empno%TYPE;
+    vename emp.ename%TYPE;
+    vpay   NUMBER;
+
+BEGIN
+    SELECT empno, ename, sal
+        INTO vempno, vename, vpay
+    FROM emp
+    WHERE deptno = 10 AND sal = (SELECT MAX(sal) FROM emp WHERE deptno =10);
+    
+    DBMS_OUTPUT.PUT_LINE(vempno || ' ' || vename || ' ' || vpay );
+END;
+    
 변수값 지정 방법  
 방법1) := 연산자에 의한 지정 
  예) 
@@ -541,6 +558,26 @@ BEGIN
 --EXCEPTON
 END;
 
+
+
+DECLARE
+    vdname dept.dname%TYPE;
+    vloc dept.loc%TYPE;
+BEGIN
+    SELECT loc
+        INTO vloc
+    FROM dept
+    WHERE deptno = 30;
+    
+    UPDATE dept
+    SET loc = vloc
+    WHERE deptno = 10;
+END;
+
+ROLLBACK;
+
+SELECT *
+FROM dept;
 -- 문제 : 30번 부서의 지역명을 얻어와서 10번 부서의 지역명으로 설정
 
 DECLARE 
@@ -647,7 +684,7 @@ BEGIN
     -- PL/SQL에서 여러개의 행을 처리할 때는 반드시 "커서"를 사용해야 한다. (암기)
     SELECT name, basicpay + sudang pay
         INTO vname, vpay
-    FROM insa
+    FROM insa;
 --    WHERE num = 1001;
     
     vmessage := vname || +  ', ' || vpay;
@@ -665,7 +702,7 @@ END;
 -- 1) 익명 프로시저 + 대입연산자 ( := ) , 제어문
 DECLARE
     a NUMBER :=1;
-    b NUMBER;
+    b NUMBER := 1;
     c NUMBER := 0;
 BEGIN
     c := a + b;
@@ -698,6 +735,24 @@ END IF;
 
 -- 만약 프로시저 테스트 할때는 새창 접속해서 1번라인부터 시작
 -- 문제) 하나의 정수를입력받아서 홀수 / 짝수라고 출력...(익명 프로시저)
+
+
+DECLARE
+    vnum NUMBER := 0;
+    vresult VARCHAR2(6);
+
+BEGIN
+    vnum := :bindNumber; 
+    IF MOD(vnum, 2) = 0 THEN vresult := '짝수';  
+    ELSE vresult := '홀수';
+    END IF;
+    
+    DBMS_OUTPUT.PUT_LINE(vresult);
+END;
+
+
+
+
 DECLARE
     vnum NUMBER(2) := 0;
     vresult VARCHAR2(2 CHAR);
@@ -733,6 +788,25 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE(vgrade);
 END;
 
+DECLARE 
+    vkor NUMBER(3) :=0;
+    vgrade VARCHAR2(1 CHAR);
+    
+BEGIN
+    vkor := :bindNumber;
+    IF vkor < 0 OR vkor > 100 THEN DBMS_OUTPUT.PUT_LINE('0~100사이의 정수 입력해라');
+    END IF;
+    vkor := TRUNC(vkor / 10);
+    IF vkor = 10 THEN vgrade := '수';
+    ELSIF vkor = 9 THEN vgrade := '수';
+    ELSIF vkor = 8 THEN vgrade := '우';
+    ELSIF vkor = 7 THEN vgrade := '미';
+    ELSIF vkor = 7 THEN vgrade := '양';
+    ELSE vgrade := '가';
+    END IF;
+    
+    DBMS_OUTPUT.PUT_LINE(vgrade);
+END;
 [2]번 방법
 DECLARE
    vkor NUMBER(3) := 0;
@@ -944,9 +1018,36 @@ BEGIN
     END LOOP;
 END;
 
+DECLARE
+    vnum NUMBER := 1;
+    vdan NUMBER := 1;
+BEGIN
+    FOR vnum IN 2..9
+    LOOP
+    FOR vdan IN 1..9
+    LOOP
+    DBMS_OUTPUT.PUT( vnum || ' * ' || vdan || ' = ' || RPAD(vnum*vdan, 4, ' ') || ' ');
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE( ' ' );
+    END LOOP;
+END;
 
-
-
+DECLARE
+    vnum NUMBER := 1;
+    vdan NUMBER := 1;
+BEGIN 
+    LOOP
+    vnum := 1;
+    vdan := vdan + 1;
+    LOOP
+    vnum := vnum+1;
+    DBMS_OUTPUT.PUT_LINE( vnum || ' * ' || vdan || ' = ' || RPAD(vnum*vdan, 4, ' ') || ' ');  
+    EXIT WHEN vnum = 9;
+    END LOOP;
+    EXIT WHEN vdan = 9;
+    DBMS_OUTPUT.PUT_LINE(' ');
+    END LOOP;
+END;
   --
   <<second_proc>>
   DBMS_OUTPUT.PUT_LINE('> 2 처리 ');
@@ -963,7 +1064,7 @@ END;
   DBMS_OUTPUT.PUT_LINE('> 3 처리 '); 
 --EXCEPTION
 END;
-
+-- 고친 내용
 2) 저장 프로시저 (stored procedure) : 대표적인 PL/SQL (가장 많이 사용되는 PL/SQL)
 3) 저장 함수    (stored function )
 4) 패키지       (package)
